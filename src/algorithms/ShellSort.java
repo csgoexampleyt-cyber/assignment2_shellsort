@@ -1,5 +1,6 @@
 package algorithms;
 
+import metrics.PerformanceTracker;
 import java.util.*;
 
 public class ShellSort {
@@ -50,18 +51,26 @@ public class ShellSort {
         };
     }
 
-    public static void sort(int[] arr, SequenceType seqType) {
+    public static void sort(int[] arr, SequenceType seqType, PerformanceTracker tracker) {
         List<Integer> gaps = getGaps(arr.length, seqType);
+
         for (int gap : gaps) {
             for (int i = gap; i < arr.length; i++) {
                 int temp = arr[i];
                 int j = i;
+
                 while (j >= gap && arr[j - gap] > temp) {
                     arr[j] = arr[j - gap];
                     j -= gap;
+                    tracker.incrementShifts();
                 }
+
                 arr[j] = temp;
             }
         }
+    }
+
+    public static void sort(int[] arr, SequenceType seqType) {
+        sort(arr, seqType, new PerformanceTracker());
     }
 }
