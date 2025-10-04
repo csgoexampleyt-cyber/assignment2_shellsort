@@ -15,7 +15,9 @@ public class BenchmarkRunner {
         Random rand = new Random();
 
         try (PrintWriter writer = new PrintWriter(new FileWriter("benchmark.csv"))) {
-            writer.println("Size,SequenceType,TimeMs");
+            writer.println("Size,SequenceType,TimeMs,AvgSpeed(Elements/ms),Shifts");
+
+            System.out.println("ShellSort Benchmark Results");
 
             for (int n : sizes) {
                 int[] arr = new int[n];
@@ -26,16 +28,21 @@ public class BenchmarkRunner {
                     PerformanceTracker tracker = new PerformanceTracker();
 
                     tracker.start();
-                    ShellSort.sort(copy, type);
+                    ShellSort.sort(copy, type, tracker);
                     tracker.stop();
 
                     double time = tracker.getElapsedMillis();
+                    long shifts = tracker.getShiftCount();
+                    double avgSpeed = n / time;
 
-                    writer.println(n + "," + type + "," + time);
-
-                    System.out.printf("n=%-6d %-10s -> %.3f ms%n", n, type, time);
+                    writer.printf("%d,%s,%.3f,%.3f,%d%n", n, type, time, avgSpeed, shifts);
+                    System.out.printf("n=%-6d %-10s | time=%.3f ms | speed=%.2f el/ms | shifts=%d%n",
+                            n, type, time, avgSpeed, shifts);
                 }
             }
+
+            System.out.println("Benchmark complete.");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
