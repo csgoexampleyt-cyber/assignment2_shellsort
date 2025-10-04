@@ -1,5 +1,7 @@
 package test;
+
 import algorithms.ShellSort;
+import metrics.PerformanceTracker;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -33,7 +35,8 @@ public class ShellSortTest {
         for (int[] arr : tests) {
             for (ShellSort.SequenceType seq : ShellSort.SequenceType.values()) {
                 int[] copy = arr.clone();
-                ShellSort.sort(copy, seq);
+                PerformanceTracker tracker = new PerformanceTracker();
+                ShellSort.sort(copy, seq, tracker);
                 if (isSorted(copy)) {
                     System.out.println(seq + " ok: " + Arrays.toString(arr));
                 } else {
